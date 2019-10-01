@@ -7,7 +7,13 @@ function Task(props) {
     const { dispatch } = props;
     dispatch(removeTask(props.index));
   }
-  return <li onClick={() => handleDelete()}>{props.name}</li>;
+  return (
+    <React.Fragment>
+      <li onClick={() => handleDelete()}>
+        {props.name} - {props.status == "done" ? "Done" : "Todo"}
+      </li>
+    </React.Fragment>
+  );
 }
 
 export default connect()(Task);

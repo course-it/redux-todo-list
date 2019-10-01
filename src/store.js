@@ -1,27 +1,7 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, combineReducers } from "redux";
 import thunkMiddleware from "redux-thunk";
-
-const InitialState = {
-  tasks: []
-};
-
-export const reducer = (state = InitialState, action) => {
-  switch (action.type) {
-    case "ADD_TASK":
-      return Object.assign({}, state, {
-        tasks: [...state.tasks, action.value]
-      });
-    case "REMOVE_TASK":
-      const newTasks = state.tasks.filter(
-        (item, index) => index !== action.value
-      );
-      return Object.assign({}, state, {
-        tasks: newTasks
-      });
-    default:
-      return state;
-  }
-};
+import { filters } from "./reducers/filters";
+import { tasks } from "./reducers/tasks";
 
 export const addTask = task => dispatch => {
   return dispatch({
@@ -37,6 +17,28 @@ export const removeTask = index => dispatch => {
   });
 };
 
+export const doneFilter = index => dispatch => {
+  return dispatch({
+    type: "DONE_FILTER"
+  });
+};
+
+export const todoFilter = index => dispatch => {
+  return dispatch({
+    type: "TODO_FILTER"
+  });
+};
+
+export const cleanFilter = index => dispatch => {
+  return dispatch({
+    type: "CLEAN_FILTER"
+  });
+};
+
 export function initializeStore() {
-  return createStore(reducer, InitialState, applyMiddleware(thunkMiddleware));
+  return createStore(
+    combineReducers({ filters, tasks }),
+    {},
+    applyMiddleware(thunkMiddleware)
+  );
 }
